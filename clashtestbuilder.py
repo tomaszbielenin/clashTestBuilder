@@ -17,7 +17,7 @@ for sset in ssets:
     for cnt in range(ssets.index(sset),len(ssets)):
         ctest = [sset,ssets[cnt]]
         # print(ctest)
-        # print(ctest[0], " vs ", ctest[1])
+        print(ctest[0], " vs ", ctest[1])
         ctests.append(ctest)
 
 # print(ctests)
