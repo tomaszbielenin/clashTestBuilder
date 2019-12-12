@@ -58,14 +58,15 @@ tmp = """<?xml version="1.0" encoding="UTF-8" ?>
 # while dlen < len(ctests):
 #     droot[0][0].append(copy.deepcopy(droot[0][0][0]))
 troot = ET.fromstring(tmp)
-b = ET.Element(troot.findall("batchtest/clashtests"))
-c = troot.findall("batchtest/clashtests/clashtest")
-dupe = ET.Element(copy.deepcopy(c)) #copy <c> node
-b.append(dupe) #insert the new node
+b = troot.find("batchtest/clashtests")
+c = troot.find("batchtest/clashtests/clashtest")
+# dupe = copy.deepcopy(c) #copy <c> node
+b.append(c) #insert the new node
 
 tree = ET.ElementTree(troot)
-tree.write(open("C:/Scripting/Git/clashTestBuilder/output.xml", "w"),encoding='unicode')
-
+dst = open("C:/Scripting/Git/clashTestBuilder/output.xml", "w")
+tree.write((dst),encoding='unicode')
+dst.close()
 # - scrap search set names
 # - file name from parameter
 # - create test sets
