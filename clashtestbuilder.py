@@ -1,9 +1,9 @@
 import sys
-# src = sys.argv[1]
-# dst = sys.argv[2]
-src = "C:/Scripting/Git/clashTestBuilder/CNEB_SearchSets.xml"
+src = sys.argv[1]
+dst = sys.argv[2]
+# src = "C:/Scripting/Git/clashTestBuilder/CNEB_SearchSets.xml"
 # tmp = "C:/Scripting/Git/clashTestBuilder/template.xml"
-dst = "C:/Scripting/Git/clashTestBuilder/output.xml"
+# dst = "C:/Scripting/Git/clashTestBuilder/output.xml"
 
 import xml.etree.ElementTree as ET
 # import copy
@@ -11,7 +11,7 @@ import xml.etree.ElementTree as ET
 sroot = ET.parse(src).getroot()
 
 ssets = []
-for sset in sroot.findall('selectionsets/selectionset'):
+for sset in sroot.findall('.//selectionset'):
     value = sset.get('name')
     ssets.append(value)
 
@@ -66,11 +66,13 @@ d = sroot.find("selectionsets")
 # dupe = copy.deepcopy(c) #copy <c> node
 a.append(d)
 nclist = []
-for i in range(3):
+for i in range(len(ctests)):
   c = ET.fromstring(ttest)
   nname = " ".join((ctests[i][0], "vs", ctests[i][1]))
-  print(nname)
+  # print(nname)
   c.set('name', nname)
+  c.find('left/clashselection/locator').text = "/".join(("lcop_selection_set_tree",ctests[i][0]))
+  c.find('right/clashselection/locator').text = "/".join(("lcop_selection_set_tree",ctests[i][1]))
   nclist.append(ET.tostring(c))
   b.append(ET.fromstring(nclist[i]))
 
