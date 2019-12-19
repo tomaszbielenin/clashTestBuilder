@@ -1,14 +1,33 @@
 import sys
 src = sys.argv[1]
 dst = sys.argv[2]
-# src = "C:/Scripting/Git/clashTestBuilder/CNEB_SearchSets.xml"
+src = "C:/Scripting/Git/clashTestBuilder/CNEB_SearchSets.xml"
 # tmp = "C:/Scripting/Git/clashTestBuilder/template.xml"
 # dst = "C:/Scripting/Git/clashTestBuilder/output.xml"
 
 import xml.etree.ElementTree as ET
 # import copy
 
-sroot = ET.parse(src).getroot()
+sroot = ET.parse(src).find('.//selectionsets')
+
+def getviewfolder():
+  if sroot.find('.//viewfolder'):
+    vfolders = []
+    for vf in sroot.findall('viewfolder'):
+      name = vf.get('name')
+      vfolders.append(name)
+  # print(vfolders)
+  return vfolders
+
+# print(getviewfolder()[1])
+
+# for vf in sroot.findall('viewfolder'):
+    # if vf.get('name') == getviewfolder()[1]:
+    #     ssets = []
+    #     for ss in vf.findall('selectionset'):
+    #         nm = ss.get('name')
+    #         ssets.append(nm)
+# print(ssets)
 
 ssets = []
 for sset in sroot.findall('.//selectionset'):
@@ -51,6 +70,12 @@ ttest = """<clashtest name="Carriageway vs Carriageway" test_type="hard" status=
         <rules/>
       </clashtest>"""
 
+# from lxml import etree
+# c = etree.fromstring(ttest)
+# ctree = etree.ElementTree(c)
+# for e in c.iter():
+#     print(ctree.getpath(e))
+
 # droot = ET.parse(dst).getroot()
 # print((droot.findall('batchtest/clashtests/clashtest')[2].get('name')))
 # dlen = len(droot.findall('batchtest/clashtests/clashtest'))
@@ -82,9 +107,5 @@ tree = ET.ElementTree(droot)
 f = open(dst, "w")
 tree.write((f),encoding='unicode')
 f.close()
-# - scrap search set names
-# - file name from parameter
-# - create test sets
-# - create tests
-# - append to file
-# - save and close
+
+# update locators naming with viewfolders
