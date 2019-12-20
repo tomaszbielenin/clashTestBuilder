@@ -1,7 +1,7 @@
 import sys
 src = sys.argv[1]
 dst = sys.argv[2]
-src = "C:/Scripting/Git/clashTestBuilder/CNEB_SearchSets.xml"
+src = "C:/Scripting/Git/clashTestBuilder/GDK_SSets_SubFolder.xml"
 # tmp = "C:/Scripting/Git/clashTestBuilder/template.xml"
 # dst = "C:/Scripting/Git/clashTestBuilder/output.xml"
 
@@ -10,24 +10,25 @@ import xml.etree.ElementTree as ET
 
 sroot = ET.parse(src).find('.//selectionsets')
 
-def getviewfolder():
-  if sroot.find('.//viewfolder'):
-    vfolders = []
-    for vf in sroot.findall('viewfolder'):
-      name = vf.get('name')
-      vfolders.append(name)
+def listElements(rt,element):
+  path = "".join(('.//',str(element)))
+  elist = []
+  if rt.find(path):
+    for el in rt.findall(path):
+      name = el.get('name')
+      elist.append(name)
   # print(vfolders)
-  return vfolders
+  return elist
 
-# print(getviewfolder()[1])
+# print(listElements(sroot,'viewfolder')[3])
 
-# for vf in sroot.findall('viewfolder'):
-    # if vf.get('name') == getviewfolder()[1]:
-    #     ssets = []
-    #     for ss in vf.findall('selectionset'):
-    #         nm = ss.get('name')
-    #         ssets.append(nm)
-# print(ssets)
+for vf in sroot.findall('viewfolder'):
+    if vf.get('name') == listElements(sroot,'viewfolder')[3]:
+        ssets = []
+        for ss in vf.findall('selectionset'):
+            nm = ss.get('name')
+            ssets.append(nm)
+print(ssets)
 
 ssets = []
 for sset in sroot.findall('.//selectionset'):
