@@ -1,12 +1,14 @@
 import sys
+import os
+import xml.etree.ElementTree as ET
+# import copy
+
 src = sys.argv[1]
 dst = sys.argv[2]
 src = "C:/Scripting/Git/clashTestBuilder/GDK_SSets_SubFolder.xml"
 # tmp = "C:/Scripting/Git/clashTestBuilder/template.xml"
-# dst = "C:/Scripting/Git/clashTestBuilder/output.xml"
-
-import xml.etree.ElementTree as ET
-# import copy
+dst = "C:/Scripting/Git/clashTestBuilder/ClashTests.xml"
+# ((os.path.basename(dst)).split(".")[0])
 
 sroot = ET.parse(src).find('.//selectionsets')
 
@@ -56,7 +58,7 @@ tmp = """<?xml version="1.0" encoding="UTF-8" ?>
   </batchtest>
 </exchange>"""
 
-ttest = """<clashtest name="Carriageway vs Carriageway" test_type="hard" status="new" tolerance="0.0000000000" merge_composites="0">
+ttest = """<clashtest name="" test_type="hard" status="new" tolerance="0.0000000000" merge_composites="0">
         <linkage mode="none"/>
         <left>
           <clashselection selfintersect="0" primtypes="1">
@@ -91,6 +93,9 @@ b = droot.find("batchtest/clashtests")
 d = sroot.find("selectionsets")
 # dupe = copy.deepcopy(c) #copy <c> node
 a.append(d)
+a.set('name',((os.path.basename(dst)).split(".")[0]))
+a.set('internal_name',((os.path.basename(dst)).split(".")[0]))
+
 nclist = []
 for i in range(len(ctests)):
   c = ET.fromstring(ttest)
