@@ -1,10 +1,10 @@
 import sys
 import os
 import xml.etree.ElementTree as ET
-# import copy
 
 src = sys.argv[1]
 dst = sys.argv[2]
+vfolders = sys.argv[3].split(",")
 src = "C:/Scripting/Git/clashTestBuilder/GDK_SSets_SubFolder.xml"
 # tmp = "C:/Scripting/Git/clashTestBuilder/template.xml"
 dst = "C:/Scripting/Git/clashTestBuilder/ClashTests.xml"
@@ -40,7 +40,6 @@ def listElements(rt,element):
     for el in rt.findall(path):
       name = el.get('name')
       elist.append(name)
-  # print(vfolders)
   return elist
 
 def ssets(rt):
@@ -65,30 +64,32 @@ sroot = ET.parse(src).find('.//selectionsets')
 droot = ET.fromstring(tmp)
 
 a = droot.find("batchtest")
-a.append(sroot.find("selectionsets")) # append selection sets from source file
+a.append(sroot) # append selection sets from source file
 a.set('name',((os.path.basename(dst)).split(".")[0]))
 a.set('internal_name',((os.path.basename(dst)).split(".")[0]))
 
 b = droot.find("batchtest/clashtests")
 
-vfname = listElements(sroot,'viewfolder')[0]
-print(vfname)
+# vfolders = listElements(sroot,'viewfolder')[1:4] - use slice as an argument maybe
+# print(vfolders)
 
+vfroots = []
 for vf in sroot.findall('viewfolder'):
-    if vf.get('name') == vfname:
-        # print(ssets(vf))
-        vfroot = vf
+    if vf.get('name') in vfolders:
+        vfroots.append(vf)
+        # what if no vfolders in sroot
 
 nclist = []
-for i in range(len(ctests(vfroot))):
-  c = ET.fromstring(ttest)
-  nname = " ".join((ctests(vfroot)[i][0], "vs", ctests(vfroot)[i][1]))
-  # print(nname)
-  c.set('name', nname)
-  c.find('left/clashselection/locator').text = "/".join(("lcop_selection_set_tree",vfname,ctests(vfroot)[i][0]))
-  c.find('right/clashselection/locator').text = "/".join(("lcop_selection_set_tree",vfname,ctests(vfroot)[i][1]))
-  nclist.append(ET.tostring(c))
-  
+for vf in vfroots:
+  vfname = vf.get('name') # test this block
+  for i in range(len(ctests(vf))):
+    c = ET.fromstring(ttest)
+    nname = " ".join((ctests(vf)[i][0], "vs", ctests(vf)[i][1]))
+    c.set('name', nname)
+    c.find('left/clashselection/locator').text = "/".join(("lcop_selection_set_tree",vfname,ctests(vf)[i][0]))
+    c.find('right/clashselection/locator').text = "/".join(("lcop_selection_set_tree",vfname,ctests(vf)[i][1]))
+    nclist.append(ET.tostring(c))
+
 for i in nclist:
   b.append(ET.fromstring(nclist[i]))
 
