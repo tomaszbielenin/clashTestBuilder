@@ -1,3 +1,7 @@
+# Add no vfolder option
+# Add tolerance arg
+# vfolders by index/slice?
+
 import sys
 import os
 import xml.etree.ElementTree as ET
@@ -5,9 +9,9 @@ import xml.etree.ElementTree as ET
 src = sys.argv[1]
 dst = sys.argv[2]
 vfolders = sys.argv[3].split(",")
-src = "C:/Scripting/Git/clashTestBuilder/GDK_SSets_SubFolder.xml"
+# src = "C:/Scripting/Git/clashTestBuilder/GDK_SSets_SubFolder.xml"
 # tmp = "C:/Scripting/Git/clashTestBuilder/template.xml"
-dst = "C:/Scripting/Git/clashTestBuilder/ClashTests.xml"
+# dst = "C:/Scripting/Git/clashTestBuilder/ClashTests.xml"
 # ((os.path.basename(dst)).split(".")[0]) - get file name
 tmp = """<?xml version="1.0" encoding="UTF-8" ?>
 
@@ -34,30 +38,28 @@ ttest = """<clashtest name="" test_type="hard" status="new" tolerance="0.0000000
       </clashtest>"""
 
 def listElements(rt,element):
+  # Lists 'name' attribute for all elements of given type
   path = "".join(('.//',str(element)))
   elist = []
   if rt.find(path):
     for el in rt.findall(path):
-      name = el.get('name')
-      elist.append(name)
+      elist.append(el.get('name'))
   return elist
 
 def ssets(rt):
+  # Returns a list of selectionsets in root element
   ssets = []
   for sset in rt.findall('.//selectionset'):
-    value = sset.get('name')
-    ssets.append(value)
+    ssets.append(sset.get('name'))
   return ssets
   
 def ctests(rt):
+  # Returns a list of ssets coupled for clash test
   ctests = []
   for sset in ssets(rt):
     for i in range((ssets(rt)).index(sset),len(ssets(rt))):
       ctest = [sset,ssets(rt)[i]]
-      # print(ctest)
-      # print(ctest[0], " vs ", ctest[1])
       ctests.append(ctest)
-      # print(ctests)
   return ctests
 
 sroot = ET.parse(src).find('.//selectionsets')
@@ -70,18 +72,17 @@ a.set('internal_name',((os.path.basename(dst)).split(".")[0]))
 
 b = droot.find("batchtest/clashtests")
 
-# vfolders = listElements(sroot,'viewfolder')[1:4] - use slice as an argument maybe
+# vfolders = listElements(sroot,'viewfolder')[0:1] # use slice as an argument maybe
 # print(vfolders)
 
 vfroots = []
 for vf in sroot.findall('viewfolder'):
     if vf.get('name') in vfolders:
-        vfroots.append(vf)
-        # what if no vfolders in sroot
+        vfroots.append(vf)        
 
 nclist = []
 for vf in vfroots:
-  vfname = vf.get('name') # test this block
+  vfname = vf.get('name')
   for i in range(len(ctests(vf))):
     c = ET.fromstring(ttest)
     nname = " ".join((ctests(vf)[i][0], "vs", ctests(vf)[i][1]))
@@ -89,9 +90,7 @@ for vf in vfroots:
     c.find('left/clashselection/locator').text = "/".join(("lcop_selection_set_tree",vfname,ctests(vf)[i][0]))
     c.find('right/clashselection/locator').text = "/".join(("lcop_selection_set_tree",vfname,ctests(vf)[i][1]))
     nclist.append(ET.tostring(c))
-
-for i in nclist:
-  b.append(ET.fromstring(nclist[i]))
+    b.append(ET.fromstring(nclist[i]))
 
 f = open(dst, "w")
 (ET.ElementTree(droot)).write((f),encoding='unicode')
