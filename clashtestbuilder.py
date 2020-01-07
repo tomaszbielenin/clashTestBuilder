@@ -8,11 +8,12 @@ import sys
 import os
 import xml.etree.ElementTree as ET
 
-src = sys.argv[1]
-dst = sys.argv[2]
-tolerance = sys.argv[3]
-vfolders = sys.argv[4].split(",")
-# src = "C:/Scripting/Git/clashTestBuilder/GDK_SSets_SubFolder.xml"
+src = sys.argv[1] # source xml file with search sets
+dst = sys.argv[2] # destination xml file
+tolerance = sys.argv[3] # add function to set tolerance
+vfolders = sys.argv[4].split(",") # viewfolder list to be processed
+ 
+# src = "C:/Scripting/Git/clashTestBuilder/SSets_SubFolder.xml"
 # tmp = "C:/Scripting/Git/clashTestBuilder/template.xml"
 # dst = "C:/Scripting/Git/clashTestBuilder/ClashTests.xml"
 # ((os.path.basename(dst)).split(".")[0]) - get file name
@@ -98,12 +99,6 @@ for vf in vfroots:
 f = open(dst, "w")
 (ET.ElementTree(droot)).write((f),encoding='unicode')
 f.close()
-
-# update locators naming with viewfolders:
-# - for one folder
-# - for each folder
-# - for chosen folder sys.argv[3]
-# - for chosen folders sys.argv[3]
 
 # from lxml import etree
 # c = etree.fromstring(ttest)
