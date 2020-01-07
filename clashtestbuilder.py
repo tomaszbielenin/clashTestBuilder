@@ -1,6 +1,8 @@
 # Add no vfolder option
 # Add tolerance arg
 # vfolders by index/slice?
+# add if for no arg - userinput
+# Add units parameter
 
 import sys
 import os
@@ -8,7 +10,8 @@ import xml.etree.ElementTree as ET
 
 src = sys.argv[1]
 dst = sys.argv[2]
-vfolders = sys.argv[3].split(",")
+tolerance = sys.argv[3]
+vfolders = sys.argv[4].split(",")
 # src = "C:/Scripting/Git/clashTestBuilder/GDK_SSets_SubFolder.xml"
 # tmp = "C:/Scripting/Git/clashTestBuilder/template.xml"
 # dst = "C:/Scripting/Git/clashTestBuilder/ClashTests.xml"
