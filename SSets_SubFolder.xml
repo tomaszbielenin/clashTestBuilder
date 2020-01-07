@@ -3800,26 +3800,6 @@
       </viewfolder>
     </viewfolder>
     <viewfolder name="User Search" guid="1dcbb011-0580-416d-b6d1-c0b6c9d3a55e">
-      <viewfolder name="SubFolder" guid="6b25e5a1-85c5-4db1-8d0d-6ba61ff7605a">
-        <selectionset name="SSID" guid="d053e440-4516-4b60-b8d6-da2e54185bdf">
-          <findspec mode="all" disjoint="1">
-            <conditions>
-              <condition test="contains" flags="26">
-                <category>
-                  <name internal="LcRevitData_Element">Element</name>
-                </category>
-                <property>
-                  <name internal="lcldrevit_parameter_984555">SSID</name>
-                </property>
-                <value>
-                  <data type="wstring">123</data>
-                </value>
-              </condition>
-            </conditions>
-            <locator>/</locator>
-          </findspec>
-        </selectionset>
-      </viewfolder>
       <selectionset name="Element ID" guid="0f29e9f4-7496-4e17-b937-b21e872ca35a">
         <findspec mode="all" disjoint="0">
           <conditions>
