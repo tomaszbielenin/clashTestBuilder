@@ -1,8 +1,10 @@
 # Add no vfolder option
 # Add tolerance arg
 # vfolders by index/slice?
-# add if for no arg - userinput
+# add if for no arg - userinput; args fro setup *.txt
 # Add units parameter
+# Clash search set against multiple search sets at once (AvB,C,D; BvC,D; DvD)
+# def locator() function to create locator string from multiple elements
 
 import sys
 import os
@@ -10,8 +12,9 @@ import xml.etree.ElementTree as ET
 
 src = sys.argv[1] # source xml file with search sets
 dst = sys.argv[2] # destination xml file
-tolerance = sys.argv[3] # add function to set tolerance
-vfolders = sys.argv[4].split(",") # viewfolder list to be processed
+vfolders = sys.argv[3].split(",") # viewfolder list to be processed
+# tolerance = sys.argv[4] # add function to set tolerance
+
  
 # src = "C:/Scripting/Git/clashTestBuilder/SSets_SubFolder.xml"
 # tmp = "C:/Scripting/Git/clashTestBuilder/template.xml"
@@ -26,7 +29,7 @@ tmp = """<?xml version="1.0" encoding="UTF-8" ?>
   </batchtest>
 </exchange>"""
 
-ttest = """<clashtest name="" test_type="hard" status="new" tolerance="0.0000000000" merge_composites="0">
+ttest = """<clashtest name="" test_type="hard" status="new" tolerance="0.0010000000" merge_composites="0">
         <linkage mode="none"/>
         <left>
           <clashselection selfintersect="0" primtypes="1">
