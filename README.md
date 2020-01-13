@@ -23,3 +23,4 @@ C:\scripting\clashtestbuilder\clashtestbuilder.exe "C:\Navisworks\SearchSets\Sea
 Author: Tomasz Bielenin
 You can check source code (Python) on https://github.com/tomaszbielenin/clashTestBuilder
 All comments and ideas for further development are welcomed.
+
