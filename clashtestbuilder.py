@@ -1,21 +1,30 @@
 # Add no vfolder option
-# Add tolerance arg
 # vfolders by index/slice?
-# add if for no arg - userinput; args fro setup *.txt
 # Add units parameter
 # Clash search set against multiple search sets at once (AvB,C,D; BvC,D; DvD)
 # def locator() function to create locator string from multiple elements
+# Add if no search set case
+# *Add option to append new tests
 
 import sys
 import os
 import xml.etree.ElementTree as ET
 
-src = sys.argv[1] # source xml file with search sets
-dst = sys.argv[2] # destination xml file
-vfolders = sys.argv[3].split(",") # viewfolder list to be processed
-# tolerance = sys.argv[4] # add function to set tolerance
+if len(sys.argv) < 3:
+  print("--Provide required parameters--")
+  print()
+  src = input('Source file:')
+  dst = input('Output file:')
+  vfolders = input('Viewfolder/s:')
+  tolerance = str(0.001*float(input('Tolerance (mm):')))
+else:
+  src = sys.argv[1] # source xml file with search sets
+  dst = sys.argv[2] # destination xml file
+  vfolders = sys.argv[3].split(",") # viewfolder list to be processed
+  tolerance = str(0.001*float(sys.argv[4])) # add function to set tolerance
 
- 
+
+
 # src = "C:/Scripting/Git/clashTestBuilder/SSets_SubFolder.xml"
 # tmp = "C:/Scripting/Git/clashTestBuilder/template.xml"
 # dst = "C:/Scripting/Git/clashTestBuilder/ClashTests.xml"
@@ -69,6 +78,10 @@ def ctests(rt):
       ctests.append(ctest)
   return ctests
 
+def locator(lst):
+  locator='/'.join(lst)
+  return locator
+
 sroot = ET.parse(src).find('.//selectionsets')
 droot = ET.fromstring(tmp)
 
@@ -94,6 +107,7 @@ for vf in vfroots:
     c = ET.fromstring(ttest)
     nname = " ".join((ctests(vf)[i][0], "vs", ctests(vf)[i][1]))
     c.set('name', nname)
+    c.set('tolerance', tolerance)
     c.find('left/clashselection/locator').text = "/".join(("lcop_selection_set_tree",vfname,ctests(vf)[i][0]))
     c.find('right/clashselection/locator').text = "/".join(("lcop_selection_set_tree",vfname,ctests(vf)[i][1]))
     nclist.append(ET.tostring(c))
