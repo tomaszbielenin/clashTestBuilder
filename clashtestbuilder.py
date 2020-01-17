@@ -103,13 +103,14 @@ for vf in sroot.findall('viewfolder'):
 nclist = []
 for vf in vfroots:
   vfname = vf.get('name')
-  for i in range(len(ctests(vf))):
+  ct = ctests(vf)
+  for i in range(len(ct)):
     c = ET.fromstring(ttest)
-    nname = " ".join((ctests(vf)[i][0], "vs", ctests(vf)[i][1]))
+    nname = " ".join((ct[i][0], "vs", ct[i][1]))
     c.set('name', nname)
     c.set('tolerance', tolerance)
-    c.find('left/clashselection/locator').text = "/".join(("lcop_selection_set_tree",vfname,ctests(vf)[i][0]))
-    c.find('right/clashselection/locator').text = "/".join(("lcop_selection_set_tree",vfname,ctests(vf)[i][1]))
+    c.find('left/clashselection/locator').text = "/".join(("lcop_selection_set_tree",vfname,ct[i][0]))
+    c.find('right/clashselection/locator').text = "/".join(("lcop_selection_set_tree",vfname,ct[i][1]))
     nclist.append(ET.tostring(c))
     b.append(ET.fromstring(nclist[i]))
 
