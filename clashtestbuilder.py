@@ -5,6 +5,8 @@
 # def locator() function to create locator string from multiple elements
 # Add if no search set case
 # *Add option to append new tests
+# Add file selection window, change root folder to sfile folder
+# Change variable type to expected one
 
 import sys
 import os
