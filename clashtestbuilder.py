@@ -7,7 +7,7 @@
 # *Add option to append new tests
 # Add file selection window, change root folder to sfile folder
 # Change variable type to expected one
-
+# Add markers for arguments e.g. -s
 import sys
 import os
 import xml.etree.ElementTree as ET
