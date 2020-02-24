@@ -8,6 +8,8 @@
 # Add file selection window, change root folder to sfile folder
 # Change variable type to expected one
 # Add markers for arguments e.g. -s
+# Clach multiple folders
+# Option without importing search sets
 
 import sys
 import os
