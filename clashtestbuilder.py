@@ -15,7 +15,7 @@ import sys
 import os
 import xml.etree.ElementTree as ET
 
-if len(sys.argv) < 3:
+if len(sys.argv) <= 1:
   print("--Provide required parameters--")
   print()
   src = input('Source file:')
