@@ -7,56 +7,16 @@
 # *Add option to append new tests
 # Add file selection window, change root folder to sfile folder
 # Change variable type to expected one
-# Add markers for arguments e.g. -s
+# Add argument detection for batch mode
 # Clach multiple folders
-# Option without importing search sets
+# Option without importing search sets (empty <selectionsets></selectionsets> node)
 
 import sys
 import os
 import xml.etree.ElementTree as ET
+import easygui
 
-if len(sys.argv) <= 1:
-  print("--Provide required parameters--")
-  print()
-  src = input('Source file:')
-  dst = input('Output file:')
-  vfolders = input('Viewfolder/s:')
-  tolerance = str(0.001*float(input('Tolerance (mm):')))
-else:
-  src = sys.argv[1] # source xml file with search sets
-  dst = sys.argv[2] # destination xml file
-  vfolders = sys.argv[3].split(",") # viewfolder list to be processed
-  tolerance = str(0.001*float(sys.argv[4])) # add function to set tolerance
-
-
-
-# src = "C:/Scripting/Git/clashTestBuilder/SSets_SubFolder.xml"
-# tmp = "C:/Scripting/Git/clashTestBuilder/template.xml"
-# dst = "C:/Scripting/Git/clashTestBuilder/ClashTests.xml"
-# ((os.path.basename(dst)).split(".")[0]) - get file name
-tmp = """<?xml version="1.0" encoding="UTF-8" ?>
-
-<exchange xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://download.autodesk.com/us/navisworks/schemas/nw-exchange-12.0.xsd" units="m" filename="" filepath="">
-  <batchtest name="CNEB_ClashTests" internal_name="CNEB_ClashTests" units="m">
-    <clashtests>
-    </clashtests>
-  </batchtest>
-</exchange>"""
-
-ttest = """<clashtest name="" test_type="hard" status="new" tolerance="0.0010000000" merge_composites="0">
-        <linkage mode="none"/>
-        <left>
-          <clashselection selfintersect="0" primtypes="1">
-            <locator>lcop_selection_set_tree/HML - Carriageway</locator>
-          </clashselection>
-        </left>
-        <right>
-          <clashselection selfintersect="0" primtypes="1">
-            <locator>lcop_selection_set_tree/HML - Carriageway</locator>
-          </clashselection>
-        </right>
-        <rules/>
-      </clashtest>"""
+#Function definitions
 
 def listElements(rt,element):
   # Lists 'name' attribute for all elements of given type
@@ -87,11 +47,68 @@ def locator(lst):
   locator='/'.join(lst)
   return locator
 
-sroot = ET.parse(src).find('.//selectionsets')
+#Argument assignments
+
+if len(sys.argv) <= 1:
+  print("--Welcome to Clash Test Builder--")
+  print("--Provide required parameters--")
+  print()
+  print('Select source file containing search sets:')
+  src = easygui.fileopenbox()
+  sroot = ET.parse(src).find('.//selectionsets')
+  print()
+  print('Available Viewfolders:')
+  for vf in sroot.findall('viewfolder'):
+    print(vf.get('name'))
+  print()
+  vfolders = str(input('Viewfolder name you want to create clash tests for:')) # option for more vfs TBA
+  print(vfolders)
+  tolerance = str(0.001*float(input('Tolerance (mm):')))
+  print('Select output file:')
+  dst = easygui.fileopenbox()
+  ssappend = input('Do you want to append search sets [y/n]?:').upper()
+else:
+  src = sys.argv[1] # source xml file with search sets
+  sroot = ET.parse(src).find('.//selectionsets')
+  dst = sys.argv[2] # destination xml file
+  vfolders = sys.argv[3].split(",") # viewfolder list to be processed
+  tolerance = str(0.001*float(sys.argv[4])) # add function to set tolerance
+  ssappend = sys.argv[4]
+
+
+# src = "C:/Scripting/Git/clashTestBuilder/SSets_SubFolder.xml"
+# tmp = "C:/Scripting/Git/clashTestBuilder/template.xml"
+# dst = "C:/Scripting/Git/clashTestBuilder/ClashTests.xml"
+# ((os.path.basename(dst)).split(".")[0]) - get file name
+tmp = """<?xml version="1.0" encoding="UTF-8" ?>
+
+<exchange xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://download.autodesk.com/us/navisworks/schemas/nw-exchange-12.0.xsd" units="m" filename="" filepath="">
+  <batchtest name="CNEB_ClashTests" internal_name="CNEB_ClashTests" units="m">
+    <clashtests>
+    </clashtests>
+  </batchtest>
+</exchange>"""
+
+ttest = """<clashtest name="" test_type="hard" status="new" tolerance="0.0010000000" merge_composites="0">
+        <linkage mode="none"/>
+        <left>
+          <clashselection selfintersect="0" primtypes="1">
+            <locator>lcop_selection_set_tree/HML - Carriageway</locator>
+          </clashselection>
+        </left>
+        <right>
+          <clashselection selfintersect="0" primtypes="1">
+            <locator>lcop_selection_set_tree/HML - Carriageway</locator>
+          </clashselection>
+        </right>
+        <rules/>
+      </clashtest>"""
+
 droot = ET.fromstring(tmp)
 
 a = droot.find("batchtest")
-a.append(sroot) # append selection sets from source file
+if ssappend == 'Y':
+  a.append(sroot) # append selection sets from source file
 a.set('name',((os.path.basename(dst)).split(".")[0]))
 a.set('internal_name',((os.path.basename(dst)).split(".")[0]))
 
